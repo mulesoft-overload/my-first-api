@@ -1,0 +1,67 @@
+#%RAML 1.0 Library
+types : 
+  employeeList:
+    displayName: ComplexJsonType
+    properties:
+      employee_details:
+        type: array
+        items:
+          type: object
+          properties:
+            employee_ID: number
+            name: string
+      company : string
+      joined : string
+      previous_company : string
+  Brochure:
+    type: object
+    example: {
+          recordNumber: 1,
+          partNumber: 56,
+          name: "Activity Brochure",
+          brand: "My Brand Ltd",
+          brochureType: "HARDCOPY",
+          CRMGroup: "Sales",
+          CRMSubGroup: "Lifestyle/Access",
+          isActiveIndicator: "N",
+          modelTree: {
+            modelTreeReference: "My Brand",
+            brand: "My Brand Ltd",
+            levelCode: 1
+            }
+        }
+    properties:
+      recordNumber: number
+      partNumber: number
+      name: string
+      brand: string
+      brochureType: string
+      CRMGroup: string
+      CRMSubGroup: string
+      isActiveIndicator: string
+      modelTree: ModelTree
+  ModelTree:
+    type: object
+    properties:
+      modelTreeReference: string
+      brand: string
+      series?: string
+      constructionSeries?: string
+      bodyType?: string
+      AGModelCode?: string
+      UKModelCode?: string
+      levelCode?: number
+  Status:
+    type: object
+    properties:
+      responseStatus:
+        enum: [COMPLETE, ERROR, FATAL]
+      responseId: number
+  Transaction:
+    type: object
+    properties:
+      status: Status
+      data:
+        type: object
+        properties:
+          brochures?: Brochure[]

@@ -1,0 +1,137 @@
+#%RAML 1.0
+title: MySalesforce API
+version: 1.0
+baseUri: http://my-salesforce-employee-list.com/api/
+
+mediaType: 
+  - application/json
+securitySchemes:
+  basic: !include common/securityScheme.raml
+protocols:
+  - HTTPS
+  - HTTP
+
+uses:
+  ComplexLib : datatypes/library.raml
+
+resourceTypes:
+  collection:
+    description: Collection of available <<resourcePathName>> in Jukebox
+    get:
+      description: Get a list of <<resourcePathName>> based on the song title.
+      responses:
+        200:
+          body:
+            application/json:
+    post:
+      description: |
+        Add a new <<resourcePathName|!singularize>> to Jukebox.
+      queryParameters:
+        access_token:
+          description: "The access token provided by the authentication application"
+          example: AABBCCDD
+          required: true
+          type: string
+      body:
+        application/json:
+          type: <<resourcePathName|!singularize>>
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                { "message": "The <<resourcePathName|!singularize>> has been properly entered" }
+  abc:
+    post:
+      queryParameters:
+          author:
+            displayName: Author
+            type: string
+            description: An author's full name
+            example: Mary Roach
+            required: false
+          publicationYear:
+            displayName: Pub Year
+            type: number
+            description: The year released for the first time in the US
+            example: 1984
+            required: false
+          rating:
+            displayName: Rating
+            type: number
+            description: Average rating (1-5) submitted by users
+            example: 3.14
+            required: false
+          isbn:
+            displayName: ISBN
+            type: string
+            minLength: 10
+            example: "0321736079"
+      description: This call posts the employee info
+      body:
+        application/json:
+          example: !include examples/post_employees.json
+          type: ComplexLib.employeeList
+      responses:
+        201:
+          body:
+            application/json:
+              example: |
+                  {
+                    "data": {
+                      "id": "SbBGk",
+                      "title": "Stiff: The Curious Lives of Human Cadavers",
+                      "description": null,
+                      "datetime": 1341533193,
+                      "genre": "science",
+                      "author": "Mary Roach",
+                      "link": "http://e-bookmobile.com/books/Stiff"
+                    },
+                    "success": true,
+                    "status": 200
+                  }
+traits:
+  special_trait : !include common/trait.raml
+  client-id-required:
+    headers:
+      client_id:
+       type: string
+       required: true
+      client_secret:
+       type: string 
+       required: true
+
+
+types:
+  simpleType: 
+    properties:
+        name: string
+        age: string
+  ComplexType: !include datatypes/Complex_dataType.raml
+  
+
+
+/employeeList:
+  description: This method helps us to post the employee list from the Salesforce account
+  type: abc
+
+/getList:
+  description: This method helps us to get the employee list from the Salesforce account
+  get:
+    description: This call get the employee info
+    is: [client-id-required, special_trait]
+    body:
+      application/json:
+        example: !include examples/post_employees.json
+        type: ComplexLib
+    responses:
+      201:
+        body:
+          application/json:
+            example: | 
+               { 
+                 "message" : "record Created"
+                 }
+
+/songs:
+  type: collection

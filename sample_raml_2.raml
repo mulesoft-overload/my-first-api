@@ -1,0 +1,119 @@
+#%RAML 1.0
+title: ALTERNATE
+version: 1.0
+
+traits: 
+ client-id-required:
+  headers: 
+    client_id:
+     type: string
+     required: true
+    client_secret:
+     type: string
+securitySchemes:
+  basic:
+    type: Basic Authentication
+uses:
+  myLib: common/library.raml
+types:
+  song: |
+    {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-03/schema",
+      "id": "http://jsonschema.net",
+      "required": true,
+      "properties": {
+        "songTitle": {
+          "type": "string",
+          "required": true
+        },
+        "albumId": {
+          "type": "string",
+          "required": true,
+          "minLength": 36,
+          "maxLength": 36
+        }
+      }
+    }
+  
+/myresource:
+  post:
+    body:
+      application/json:
+        type: myLib.myType
+/myresources:
+  post:
+    body:
+      application/json:
+        type: !include common/datatype1.raml
+
+/books:
+ is: [client-id-required]
+ securedBy: [ basic ]
+ get:
+    body:
+      application/json:
+        example:
+          |
+                {
+                  "data": {
+                    "id": "SbBGk",
+                    "title": "Stiff: The Curious Lives of Human Cadavers",
+                    "description": null,
+                    "datetime": 1341533193,
+                    "genre": "science",
+                    "author": "Mary Roach",
+                    "link": "http://e-bookmobile.com/books/Stiff"
+                  },
+                  "success": true,
+                  "status": 200
+                }
+        
+
+/authors:
+ is: [client-id-required]
+ securedBy: [ basic ]
+ get:
+   body:
+    application/json:
+     type: song
+     example: |
+      {
+        "songId": "550e8400-e29b-41d4-a716-446655440000",
+        "songTitle": "Get Lucky",
+        "albumId": "183100e3-0e2b-4404-a716-66104d440550"
+      }
+/Author-books:
+  /{bookstitle}:
+    get:
+      queryParameters:
+        author:
+          displayName: Author
+          type: string
+          description: An author's full name
+          example: Mary Roach
+          required: false
+        publicationYear:
+          displayName: Pub Year
+          type: number
+          description: The year released for the first time in the US
+          example: 1984
+          required: false
+        rating:
+          displayName: Rating
+          type: number
+          description: Average rating (1-5) submitted by users
+          example: 3.14
+          required: false
+        isbn:
+          displayName: ISBN
+          type: string
+          minLength: 10
+          example: 0321736079
+    put:
+      queryParameters:
+        access_token:
+          displayName: Access Token
+          type: string
+          description: Token giving you permission to make call
+          required: true

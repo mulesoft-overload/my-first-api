@@ -1,0 +1,12 @@
+#%RAML 1.0 Trait
+
+queryParameters:
+  employee_special_id:
+    displayName: special id 
+    required: true
+responses:
+      200:
+        body:
+          application/json:
+            example: !include /examples/post_employees.json
+            type: ComplexLib.employeeList

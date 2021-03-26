@@ -1,0 +1,11 @@
+{
+  "main": "mysalesforce-api.raml",
+  "name": "MySalesforce API",
+  "classifier": "raml",
+  "tags": [],
+  "groupId": "bc8ae866-3d54-483c-a13f-51119c49421a",
+  "assetId": "mysalesforce-api",
+  "version": "1.0.0",
+  "apiVersion": "1.0",
+  "originalFormatVersion": "1.0"
+}

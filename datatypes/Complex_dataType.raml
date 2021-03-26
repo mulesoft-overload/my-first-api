@@ -1,0 +1,15 @@
+#%RAML 1.0 DataType
+type : array
+items:
+  type: object
+  properties:
+      employee_details:
+          type: array
+          items:
+            type: object
+            properties:
+                employee_ID: number
+                name: string
+      company : string
+      joined : string
+      previous_company : string
